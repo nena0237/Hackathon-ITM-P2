@@ -1,0 +1,193 @@
+@import "tailwindcss";
+
+/* Fuentes autoalojadas (@fontsource variable). Fallback: system-ui y ui-monospace en --font-sans y --font-mono. */
+@import "@fontsource-variable/familjen-grotesk";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* Tokens de DESIGN.md. Solo tema claro. */
+:root {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --ink: #0d0d0d;
+  --muted: #5c5c5c;
+  --line: #d4d4d4;
+  --lime: #c8f31d;
+  --error: #b3261e;
+  --hatch: repeating-linear-gradient(135deg, #0d0d0d 0 1px, #ffffff 1px 6px);
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@theme {
+  --color-*: initial;
+  --color-bg: #f5f5f5;
+  --color-surface: #ffffff;
+  --color-ink: #0d0d0d;
+  --color-muted: #5c5c5c;
+  --color-line: #d4d4d4;
+  --color-lime: #c8f31d;
+  --color-error: #b3261e;
+
+  --font-sans: "Familjen Grotesk Variable", "Familjen Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Escala tipográfica: 12, 14, 16, 19, 24, 32, 46 */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 19px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 46px;
+
+  /* Esquinas rectas en todo */
+  --radius-*: initial;
+
+  /* Sin sombras */
+  --shadow-*: initial;
+
+  --ease-strong: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* La barra sticky no debe tapar el campo que recibe el foco */
+    scroll-padding-top: 120px;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    letter-spacing: -0.04em;
+    line-height: 0.98;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  /* Foco visible: 3 px tinta con offset de 3 px */
+  :focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  /* Inputs a 16 px para que iOS no haga zoom */
+  input,
+  select,
+  textarea {
+    font: inherit;
+    font-size: 16px;
+  }
+}
+
+@layer components {
+  /* Cifras y montos */
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Press: scale 0.97 en 100 ms al presionar (no al soltar) */
+  .press {
+    transition:
+      transform 100ms var(--ease),
+      background-color 120ms var(--ease);
+  }
+  .press:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* Hover de filas: solo color de fondo, 120 ms */
+  .row-hover {
+    transition: background-color 120ms var(--ease);
+  }
+  .row-hover:hover {
+    background-color: var(--bg);
+  }
+
+  /* Casilla recta: borde de tinta; marcada = cuadro tinta dentro (lima vs blanco no llega a 3:1); mixta = trama */
+  .check {
+    appearance: none;
+    flex: none;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    border: 2px solid var(--ink);
+    background: var(--surface);
+    background-clip: content-box;
+    padding: 3px;
+    cursor: inherit;
+  }
+  .check:checked {
+    background: var(--ink);
+    background-clip: content-box;
+  }
+  .check:indeterminate {
+    background: var(--hatch);
+    background-clip: content-box;
+  }
+  .check:disabled {
+    border-color: var(--line);
+  }
+
+  dialog::backdrop {
+    background: rgb(13 13 13 / 0.6);
+  }
+
+  .hatch {
+    background: var(--hatch);
+  }
+
+  /* Pestañas: barra desplazable sin scrollbar visible */
+  .tabs-scroll {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Sin movimiento: todo aparece en su estado final */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+    animation-duration: 0ms !important;
+    animation-delay: 0ms !important;
+  }
+  .press:active:not(:disabled) {
+    transform: none;
+  }
+}
